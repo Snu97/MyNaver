@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container my-3">
+<title>새 작품 쓰기 : 네이버웹소설</title>
+
+<card>
+    <h5 class="my-3 border-bottom pb-3">새 작품 쓰기</h5>
+    <h4 class="my-3 border-bottom pb-1">저작권 등 다른 사람의 권리를 침해하거나 명예를 훼손하는 게시물은 이용약관 및 관련 법률에 의하여 제재를 받을 수 있습니다.
+작품 및 회차 연재 시 운영원칙에 동의한 것으로 간주합니다. 성인물, 폭력물 등 운영원칙에 위배되는 작품은 통보 없이 삭제될 수 있습니다. 상세보기</h4> <!--novel id 모색-->
+    <form method="post" class="post-form my-3">
+        {{ form.csrf_token }}
+        <!-- 오류표시 -->
+        {% for field, errors in form.errors.items() %}
+        <div class="alert alert-danger" role="alert">
+            <strong>{{ form[field].label }}</strong>: {{ ', '.join(errors) }}
+        </div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="subject">제목</label>
+            <input type="text" class="form-control" name="subject" id="subject" value="{{ form.subject.data or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="subject">작품 소개</label>
+            <textarea class="form-control" name="content" id="content" rows="5">{{ form.content.data or '' }}</textarea>
+
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">저장하기</button>
+    </form>
+</card>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<title>베스트리그 추천 : 네이버웹소설</title>
+
+<div class="container my-3">
+    {% if novel_rank %}
+        <ul>
+            {% for novel in novel_rank %}
+            <div class="card">
+                <a href="{{ url_for('best._list', novel_id=novel.id) }}">
+                    <div class="card-body">
+                        <div class="card-text" style="white-space: pre-line;">
+                                {{ novel.subject }}
+                        </div>
+
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>작품이 없습니다.</p>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

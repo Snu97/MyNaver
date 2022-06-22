@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<title>{{ number.subject }},  novel.subject }} : 네이버웹소설</title>
+<div class="container my-3">
+    <div class="border-bottom"><h1>{{ number.subject }}</h1></div>
+
+    {% if g.user == number.user %}
+    <div class="my-3">
+        <a href="{{ url_for('number.modify', number_id=number.id) }}"
+               class="btn btn-sm btn-outline-secondary">작품 관리</a>
+        <a href="#" class="delete btn btn-sm btn-outline-secondary" data-uri="{{ url_for('number.delete', number_id=number.id) }}">삭제</a>
+    </div>
+    {% endif %}
+
+
+    <div class="card my-3">
+        <div class="card-text" style="white-space: pre-line;"><div class="container m-4"><h4>{{ number.content }}</h4></div></div>
+    </div>
+
+    <!--작품 리뷰-->
+    <h5>댓글 {{ number.comment_set|length }}</h5>
+    <form action="{{ url_for('review.create_comment', number_id=number.id) }}" method="post" class="my-3">
+        <div class="form-group">
+            <textarea {% if not g.user %}disabled{% endif %} name="content" id="content" class="form-control" rows="4"></textarea>
+        </div>
+        <input type="submit" value="답변등록" class="btn btn-primary">
+    </form>
+
+    {% for comment in number.comment_set %}
+    <div class="card my-3">
+        <div class="card-body">
+            <span>{{ comment.user.nick }}</span>
+            <div class="card-text" style="white-space: pre-line;">{{ comment.content }}</div>
+            <div class="badge badge-light p-2">{{ comment.create_date|datetime }}</div>
+
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".delete").on('click', function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}

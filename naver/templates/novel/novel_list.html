@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<title>{{ novel.subject }} : 네이버웹소설</title>
+
+<div class="container my-3">
+    <h1>{{ novel.subject }}</h1>
+    <p class="writer">글 {{ novel.user.nick }}</p><!--닉네임으로 변경 및 클릭시 검색페이지 이동-->
+    <div>
+        <span style="float: left">
+            <img src="https://novel-phinf.pstatic.net/20200811_20/novel_15971265795915nduG_JPEG/cover.jpg?type=f320_220_2" width="320" height="220" alt="저주로 랭킹 1위">
+
+        </span>
+        <p>별점        </p>
+        {% if g.user == novel.user %}
+        <div class="my-3">
+            <a href="{{ url_for('best.modify', novel_id=novel.id) }}"
+               class="btn btn-sm btn-outline-secondary">작품 관리</a>
+            <a href="#" class="delete btn btn-sm btn-outline-secondary"
+        data-uri="{{ url_for('best.delete', novel_id=novel.id) }}">삭제</a>
+            <a href="{{ url_for('best.create', novel_id=novel.id) }}"
+               class="btn btn-sm btn-outline-secondary">작품올리기</a>
+        </div>
+        {% endif %}
+        <p>{{ novel.content }}</p>
+    </div>
+
+    <div style="clear:both">
+        <table class="table">
+
+            {% for number in number_list.items %}
+            {% if number.novel_id==novel.id %}
+            <div class="card">
+                <a href="{{ url_for('best.detail', number_id=number.id) }}">
+                    <div class="card-body">
+                        <div class="card-text" style="white-space: pre-line;">
+                            {{ number.subject }}
+                        </div>
+                        <div class="badge badge-light p-2">{{ number.create_date|datetime }}</div>
+
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+
+            {% endfor %}
+
+
+        </table>
+        <!-- 페이징처리 시작 -->
+        <ul class="pagination justify-content-center">
+            <!-- 이전페이지 -->
+            {% if number_list.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ number_list.prev_num }}">이전</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
+            {% endif %}
+            {% for page_num in number_list.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num != number_list.page %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="#">{{ page_num }}</a>
+                    </li>
+                    {% endif %}
+               {% else %}
+                    <li class="disabled">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+               {% endif %}
+            {% endfor %}
+            <!-- 다음페이지 -->
+            {% if number_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ number_list.next_num }}">다음</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            </li>
+            {% endif %}
+        </ul>
+         <!-- 페이징처리 끝 -->
+
+
+
+    </div>
+
+    <!--작품 리뷰-->
+    <h5>댓글 {{ novel.review_set|length }}</h5>
+    <form action="{{ url_for('review.create', novel_id=novel.id) }}" method="post" class="my-3">
+        <div class="form-group">
+            <textarea {% if not g.user %}disabled{% endif %} name="content" id="content" class="form-control" rows="4"></textarea>
+        </div>
+        <input type="submit" value="답변등록" class="btn btn-primary">
+    </form>
+
+    {% for review in novel.review_set %}
+    <div class="card my-3">
+        <div class="card-body">
+            <span>{{ review.user.nick }}</span>
+            <div class="card-text" style="white-space: pre-line;">{{ review.content }}</div>
+            <div class="badge badge-light p-2">{{ review.create_date|datetime }}</div>
+
+        </div>
+    </div>
+    {% endfor %}
+
+
+</div>
+
+
+
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".delete").on('click', function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}
+
+
+
+
+
+

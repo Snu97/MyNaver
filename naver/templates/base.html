@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <!-- naver CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+
+{% include "navbar.html" %}
+
+
+<!-- 기본 템플릿 안에 삽입될 내용 Start -->
+
+<div class="container my-3">
+    <table class="table">
+        <thead>
+        <tr class="thead-white">
+            <th><a href="/best/">홈</a></th>
+            <th><a href="/best/">오늘의웹소설</a></th>
+            <th><a href="/best/">베스트리그</a></th>
+            <th><a href="/best/">챌린지리그</a></th>
+            {% if g.user %}
+            <th><a href="{{ url_for('best.my_list') }}">MY</a></th>
+            <th><a href="{{ url_for('best.best') }}">작품올리기</a></th>
+            {% else %}
+            <th>ㅤㅤ</th>
+            <th>ㅤㅤㅤㅤ</th>
+            {% endif %}
+        </tr>
+        </thead>
+
+
+    </table>
+</div>
+
+{% block content %}
+{% endblock %}
+
+
+<!-- 기본 템플릿 안에 삽입될 내용 End -->
+<!-- jQuery JS -->
+<script src="{{ url_for('static', filename='jquery-3.5.1.min.js') }}"></script>
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+<!-- 자바스크립트 Start -->
+{% block script %}
+{% endblock %}
+<!-- 자바스크립트 End -->
+
+</body>
+</html>
